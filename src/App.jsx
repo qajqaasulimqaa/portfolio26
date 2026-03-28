@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Scene from "./Components/Scene"
-import Chat from "./Components/Chat"
+import Chat from "./Components/Chat/Chat"
 
 export default function App() {
   const [chatOpen, setChatOpen] = useState(false)  // ← here!

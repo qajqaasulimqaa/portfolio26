@@ -58,33 +58,36 @@ export default function Princess({ onPrincessClick }) {
   })
 //Opening and closing the AI chat
   function handleClick() {
+    console.log("Princess clicked!")
     setIsControlling(true)
     onPrincessClick()
   }
 
  return (
     <group ref={ref}>
-      <Html position={[0, 1.5, 0]} center>
-        <div style={{
-          color: "#c4b5fd",
-          fontSize: 12,
-          fontFamily: "sans-serif",
-          whiteSpace: "nowrap",
-          background: "rgba(26,10,46,0.7)",
-          padding: "4px 10px",
-          borderRadius: 20,
-          border: "1px solid #7f5af0",
-          pointerEvents: "none"
-        }}>
+      <Html position={[0, 8, 0]} center>
+        <div
+          onClick={handleClick}
+          style={{
+            color: "#c4b5fd",
+            fontSize: 12,
+            fontFamily: "sans-serif",
+            whiteSpace: "nowrap",
+            background: "rgba(26,10,46,0.7)",
+            padding: "4px 10px",
+            borderRadius: 20,
+            border: "1px solid #7f5af0",
+            cursor: "pointer",
+            userSelect: "none"
+          }}>
           click me 💜
         </div>
       </Html>
       <primitive
         object={scene}
         scale={1}
-        position={[0, -1, 0]}
+        position={[0, 5, 0]}
         rotation={[0, Math.PI, 0]}
-        onClick={handleClick}
       />
     </group>
   )
