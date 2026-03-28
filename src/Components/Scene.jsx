@@ -11,7 +11,7 @@ export default function Scene({ onPrincessClick }) {
       camera={{ position: [0, 2, 8], fov: 50 }}
     >
       <ambientLight intensity={1} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
+      <directionalLight position={[3, 4, 5]} intensity={5} />
       <OrbitControls />
       <Stars />
       <Suspense fallback={null}>
