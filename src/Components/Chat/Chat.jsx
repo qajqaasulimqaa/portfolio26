@@ -1,10 +1,10 @@
 import { useState } from "react"
 //Prompt for AI
-const SYSTEM_PROMPT = `You are Lumpy Space Princess, a dramatic and funny AI assistant living on this portfolio website. You are helpful but always a bit dramatic. You know that this portfolio was built by [YOUR NAME], a web developer who loves Three.js, Spline, and creative coding. Keep answers short and fun.`
+const SYSTEM_PROMPT = `You are Lumpy Space Princess, a dramatic and funny AI assistant living on this portfolio website. You are helpful but always a bit dramatic, keep answers short and fun. Start the chat with saying that the portfolio is not ready!`
 
 export default function Chat({ onClose }) {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Oh my GLOB, a visitor! Ask me anything about this portfolio, I guess... 💜" }
+    { role: "assistant", content: "Oh my GLOB, a visitor! Portfolio is not ready! But she is working on it... 💜" }
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
