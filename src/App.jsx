@@ -2,6 +2,7 @@ import { useState } from "react"
 import Scene from "./Components/Scene"
 import Chat from "./Components/Chat/Chat"
 import BubblePanel from "./Components/Bubbles/BubblePanel"
+import { BUBBLE_COUNT } from "./Components/Bubbles/BubbleManager"
 
 export default function App() {
   const [chatOpen, setChatOpen] = useState(false)
@@ -31,6 +32,8 @@ export default function App() {
           title={panel.title}
           src={panel.src}
           onClose={handlePanelClose}
+          activeBubbleIndex={activeBubbleIndex}
+          totalBubbles={BUBBLE_COUNT}
         />
       )}
     </>

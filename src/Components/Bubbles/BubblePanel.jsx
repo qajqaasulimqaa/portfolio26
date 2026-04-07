@@ -1,4 +1,7 @@
-export default function BubblePanel({ title, src, onClose }) {
+export default function BubblePanel({ title, src, onClose, activeBubbleIndex, totalBubbles }) {
+  const canGoUp   = activeBubbleIndex > 0
+  const canGoDown = activeBubbleIndex < totalBubbles - 1
+
   return (
     <>
       {/* Backdrop */}
@@ -31,6 +34,7 @@ export default function BubblePanel({ title, src, onClose }) {
           flexDirection: "column",
         }}
       >
+        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -50,6 +54,7 @@ export default function BubblePanel({ title, src, onClose }) {
             ✕
           </button>
         </div>
+
         <iframe
           src={src}
           width="100%"
@@ -57,6 +62,29 @@ export default function BubblePanel({ title, src, onClose }) {
           style={{ border: "none", flex: 1 }}
           allow="fullscreen"
         />
+
+        {/* Scroll hint footer */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 24,
+            padding: "7px 16px",
+            background: "#2d1b69",
+            borderTop: "1px solid #3d2a7a",
+            fontSize: 12,
+            userSelect: "none",
+          }}
+        >
+          <span style={{ color: canGoUp ? "#ffffff" : "#4a3a6a", transition: "color 0.2s" }}>
+            ↑ prev project
+          </span>
+          <span style={{ color: "#ffffff", fontSize: 10 }}>scroll to navigate</span>
+          <span style={{ color: canGoDown ? "#c4b5fd" : "#4a3a6a", transition: "color 0.2s" }}>
+            next project ↓
+          </span>
+        </div>
       </div>
     </>
   )

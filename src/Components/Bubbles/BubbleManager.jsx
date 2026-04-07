@@ -4,6 +4,8 @@ import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import gsap from 'gsap'
 
+export const BUBBLE_COUNT = 4
+
 const BUBBLES = [
   { id: 0, position: [0, 0, 0],       model: "/bubble.gltf",   title: "Erasmus+ Work", src: "https://reiceseco.vercel.app/",        cameraOffset: [-19, 22, 8] },
   { id: 1, position: [-20, 13, -2],   model: "/bubble-a.gltf", title: "Krúnk",         src: "https://krunk-eight.vercel.app/login", cameraOffset: [-5, 2, 3]   },
@@ -82,6 +84,25 @@ export default function BubbleManager({ onBubbleClick, activeBubbleIndex }) {
       })
     }
   }
+
+  // Reset camera to original position when panel is closed
+  const everActivated = useRef(false)
+  useEffect(() => {
+    if (activeBubbleIndex === null) {
+      if (!everActivated.current) return // skip initial mount
+      gsap.to(camera.position, { x: 0, y: 10, z: 50, duration: 1.2, ease: "power2.inOut" })
+      if (controls) {
+        gsap.to(controls.target, {
+          x: 0, y: 0, z: 0,
+          duration: 1.2,
+          ease: "power2.inOut",
+          onUpdate: () => controls.update()
+        })
+      }
+    } else {
+      everActivated.current = true
+    }
+  }, [activeBubbleIndex])
 
   // Scroll wheel navigation — only active when a bubble panel is open
   useEffect(() => {
