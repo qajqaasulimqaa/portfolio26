@@ -1,6 +1,16 @@
-export default function BubblePanel({ title, src, onClose, activeBubbleIndex, totalBubbles }) {
+export default function BubblePanel({ title, src, image, onClose, onPrev, onNext, activeBubbleIndex, totalBubbles }) {
   const canGoUp   = activeBubbleIndex > 0
   const canGoDown = activeBubbleIndex < totalBubbles - 1
+
+  const btnBase = {
+    fontSize: 10,
+    background: "none",
+    border: "1px solid #7f5af0",
+    borderRadius: 4,
+    cursor: "pointer",
+    padding: "2px 8px",
+    transition: "color 0.2s, border-color 0.2s",
+  }
 
   return (
     <>
@@ -11,12 +21,11 @@ export default function BubblePanel({ title, src, onClose, activeBubbleIndex, to
           position: "fixed",
           inset: 0,
           zIndex: 99,
-          background: "transparent",
+          background: "rgba(0, 0, 0, 0.5)",
         }}
-      />
-
-      {/* Panel */}
+      >
       <div
+        onClick={e => e.stopPropagation()}
         style={{
           position: "fixed",
           top: "50%",
@@ -44,6 +53,17 @@ export default function BubblePanel({ title, src, onClose, activeBubbleIndex, to
             background: "#2d1b69",
           }}
         >
+          {src && (
+            <a
+              href={src}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#c4b5fd", fontSize: 12, textDecoration: "none", border: "1px solid #7f5af0", borderRadius: 4, padding: "2px 10px" }}
+            >
+              ↗ visit site
+            </a>
+          )}
+
           <span style={{ color: "#c4b5fd", fontSize: 14, fontWeight: 600 }}>
             {title}
           </span>
@@ -55,15 +75,21 @@ export default function BubblePanel({ title, src, onClose, activeBubbleIndex, to
           </button>
         </div>
 
-        <iframe
-          src={src}
-          width="100%"
-          height="100%"
-          style={{ border: "none", flex: 1 }}
-          allow="fullscreen"
-        />
+        {image ? (
+          <div style={{ flex: 1, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "#0d0620" }}>
+            <img src={image} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+        ) : (
+          <iframe
+            src={src}
+            width="100%"
+            height="100%"
+            style={{ border: "none", flex: 1 }}
+            allow="fullscreen"
+          />
+        )}
 
-        {/* Scroll hint footer */}
+        {/* Footer nav */}
         <div
           style={{
             display: "flex",
@@ -77,14 +103,23 @@ export default function BubblePanel({ title, src, onClose, activeBubbleIndex, to
             userSelect: "none",
           }}
         >
-          <span style={{ color: canGoUp ? "#ffffff" : "#4a3a6a", transition: "color 0.2s" }}>
+          <button
+            onClick={canGoUp ? onPrev : undefined}
+            disabled={!canGoUp}
+            style={{ ...btnBase, color: canGoUp ? "#ffffff" : "#4a3a6a", borderColor: canGoUp ? "#7f5af0" : "#3d2a7a" }}
+          >
             ↑ prev project
-          </span>
+          </button>
           <span style={{ color: "#ffffff", fontSize: 10 }}>scroll to navigate</span>
-          <span style={{ color: canGoDown ? "#c4b5fd" : "#4a3a6a", transition: "color 0.2s" }}>
+          <button
+            onClick={canGoDown ? onNext : undefined}
+            disabled={!canGoDown}
+            style={{ ...btnBase, color: canGoDown ? "#ffffff" : "#4a3a6a", borderColor: canGoDown ? "#7f5af0" : "#3d2a7a" }}
+          >
             next project ↓
-          </span>
+          </button>
         </div>
+      </div>
       </div>
     </>
   )

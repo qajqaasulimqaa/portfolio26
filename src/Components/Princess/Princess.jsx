@@ -65,7 +65,7 @@ export default function Princess({ onPrincessClick }) {
 
  return (
     <group ref={ref}>
-      <Html position={[0, 8, 0]} center>
+      <Html position={[0, 18, 0]} center>
         <div
           onClick={handleClick}
           style={{
@@ -86,7 +86,7 @@ export default function Princess({ onPrincessClick }) {
       <primitive
         object={scene}
         scale={1}
-        position={[0, 5, 0]}
+        position={[0, 12, 0]}
         rotation={[0, Math.PI, 0]}
       />
     </group>

@@ -9,11 +9,11 @@ export const BUBBLE_COUNT = 4
 const BUBBLES = [
   { id: 0, position: [0, 0, 0],       model: "/bubble.gltf",   title: "Erasmus+ Work", src: "https://reiceseco.vercel.app/",        cameraOffset: [-19, 22, 8] },
   { id: 1, position: [-20, 13, -2],   model: "/bubble-a.gltf", title: "Krúnk",         src: "https://krunk-eight.vercel.app/login", cameraOffset: [-5, 2, 3]   },
-  { id: 2, position: [-10, 10, -2],   model: "/bubble-b.gltf", title: "Rammagerðin",   src: "https://rammagerdin.com",              cameraOffset: [5, 2, 3]    },
-  { id: 3, position: [-10, 15, -1],   model: "/bubble-d.gltf", title: "Project Four",  src: "https://rammagerdin.com/",             cameraOffset: [-1, 8, 0]   },
+  { id: 2, position: [-10, 10, -2],   model: "/bubble-b.gltf", title: "Guest House-Willa Sulimowka",   src: "https://willasulimowka.pl",              cameraOffset: [5, 2, 3]    },
+  { id: 3, position: [-10, 15, -1],   model: "/bubble-d.gltf", image: "/rammagerdin.png", title: "Rammagerðin-website",  src: "https://rammagerdin.com/",   button: "Learn More",  cameraOffset: [-1, 8, 0]   },
 ]
 
-// A single bubble — just renders the model and delegates navigation upward
+
 function Bubble({ data, onNavigate }) {
   const { scene } = useGLTF(data.model)
 
@@ -44,13 +44,18 @@ function Bubble({ data, onNavigate }) {
   )
 }
 
-export default function BubbleManager({ onBubbleClick, activeBubbleIndex }) {
+export default function BubbleManager({ onBubbleClick, onReady, activeBubbleIndex, image }) {
   const { camera, controls } = useThree()
   const isAnimating = useRef(false)
 
   // Keep a ref so the wheel handler always calls the latest version without
   // needing to be re-registered every render
   const navigateRef = useRef(null)
+
+  // Expose a stable navigate function to the outside world (for panel buttons)
+  const stableNavigate = useRef((index) => navigateRef.current(index))
+  useEffect(() => { onReady?.(stableNavigate.current) }, [])
+
   navigateRef.current = (index) => {
     if (index < 0 || index >= BUBBLES.length) return
     if (isAnimating.current) return
@@ -60,7 +65,7 @@ export default function BubbleManager({ onBubbleClick, activeBubbleIndex }) {
     const newCamPos = bubblePos.clone().add(new THREE.Vector3(...data.cameraOffset))
 
     isAnimating.current = true
-
+//Smooth animation by GSAP
     gsap.to(camera.position, {
       x: newCamPos.x,
       y: newCamPos.y,
@@ -69,7 +74,7 @@ export default function BubbleManager({ onBubbleClick, activeBubbleIndex }) {
       ease: "power2.inOut",
       onComplete: () => {
         isAnimating.current = false
-        onBubbleClick(data.title, data.src, index)
+        onBubbleClick(data.title, data.src, index, data.image)
       }
     })
 
