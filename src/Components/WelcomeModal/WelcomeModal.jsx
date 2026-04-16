@@ -66,7 +66,7 @@ export default function WelcomeModal({ onClose }) {
 
         {/* Message */}
         <p style={{ margin: "0 0 28px", fontSize: 15, lineHeight: 1.7, color: "#b8acd4" }}>
-          This portfolio is still being built — things may look unfinished or change at any time.
+          This portfolio is still being built, things may look unfinished :()
         </p>
 
         {/* Instructions */}
