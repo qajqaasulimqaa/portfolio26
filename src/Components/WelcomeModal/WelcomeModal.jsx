@@ -45,25 +45,6 @@ export default function WelcomeModal({ onClose }) {
         >
           Welcome
         </h1>
-
-        {/* Work-in-progress badge */}
-        <div
-          style={{
-            display: "inline-block",
-            background: "rgba(127, 90, 240, 0.15)",
-            border: "1px solid #7f5af044",
-            borderRadius: 20,
-            padding: "4px 16px",
-            fontSize: 12,
-            color: "#a78bfa",
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            marginBottom: 24,
-          }}
-        >
-          Work in progress
-        </div>
-
         {/* Message */}
         <p style={{ margin: "0 0 28px", fontSize: 15, lineHeight: 1.7, color: "#b8acd4" }}>
           This portfolio is still being built, things may look unfinished :()
