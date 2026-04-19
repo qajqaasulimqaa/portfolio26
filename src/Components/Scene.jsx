@@ -8,7 +8,7 @@ import BubbleManager from "./Bubbles/BubbleManager"
 import DayNight from "./Toggle/Day-Night"
 import * as THREE from "three"
 
-export default function Scene({ onPrincessClick, onBubbleClick, onBubbleReady, activeBubbleIndex, onTreeClick, onTreeReady, onTreeResetReady, onTreeNextReady, onFloorClick }) {
+export default function Scene({ onPrincessClick, onBubbleClick, onBubbleReady, activeBubbleIndex, onTreeClick, onTreeReady, onTreeResetReady, onTreeNextReady, onTreeNext2Ready, onTreeNext3Ready }) {
 
   const [isDay, setIsDay] = useState(true)
   const controlsRef = useRef()
@@ -26,13 +26,24 @@ export default function Scene({ onPrincessClick, onBubbleClick, onBubbleReady, a
       <Environment preset="night" />
       <ambientLight intensity={0.3} />
       <directionalLight position={[30, 4, 5]} intensity={0} />
-      <OrbitControls ref={controlsRef} makeDefault maxPolarAngle={Math.PI / 2 - 0.05} />
-      <Floor onClick={onFloorClick} />
+      <OrbitControls
+        ref={controlsRef}
+        makeDefault
+        enableDamping
+        dampingFactor={0.05}
+        maxPolarAngle={Math.PI / 2 - 0.05}
+        minDistance={10}
+        maxDistance={140}
+        panSpeed={1.2}
+        zoomSpeed={0.8}
+        rotateSpeed={0.6}
+      />
+      <Floor />
       <Suspense fallback={null}>
        <DayNight isDay={isDay} onToggle={() => setIsDay(!isDay)} />
         <Princess onPrincessClick={onPrincessClick} />
         <BubbleManager onBubbleClick={onBubbleClick} onReady={onBubbleReady} activeBubbleIndex={activeBubbleIndex} />
-        <Tree position={[10, 2, 5]} controlsRef={controlsRef} onTreeClick={onTreeClick} onReady={onTreeReady} onResetReady={onTreeResetReady} onNextReady={onTreeNextReady} />
+        <Tree position={[10, 2, 5]} controlsRef={controlsRef} onTreeClick={onTreeClick} onReady={onTreeReady} onResetReady={onTreeResetReady} onNextReady={onTreeNextReady} onNext2Ready={onTreeNext2Ready} onNext3Ready={onTreeNext3Ready} />
       </Suspense>
     </Canvas>
   )

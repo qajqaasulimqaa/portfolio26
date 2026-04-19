@@ -1,15 +1,16 @@
-import { useGLTF } from "@react-three/drei"
+import { useGLTF, useAnimations } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
-import { useEffect } from "react"
+import { useEffect, useRef, useCallback } from "react"
 import gsap from "gsap"
-import { Text } from "@react-three/drei"
 
 
-export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, onReady, onResetReady, onNextReady }) {
-  const { scene } = useGLTF("/tree.glb")
+export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, onReady, onResetReady, onNextReady, onNext2Ready, onNext3Ready }) {
+  const { scene, animations } = useGLTF("/tree.glb")
+  const ref = useRef()
+  const { actions } = useAnimations(animations, ref)
   const { camera } = useThree()
 
-  function flyCamera(targetPosition, lookAtTarget, onComplete) {
+  const flyCamera = useCallback((targetPosition, lookAtTarget, onComplete) => {
     gsap.to(camera.position, {
       ...targetPosition,
       duration: 1.5,
@@ -22,9 +23,10 @@ export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, o
       },
       onComplete,
     })
-  }
+  }, [camera, controlsRef])
 
   useEffect(() => {
+    //Temporely log camera position for fine-tuning
     function logCamera(e) {
       if (e.key !== "l" && e.key !== "L") return
       const p = camera.position
@@ -39,29 +41,27 @@ export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, o
   }, [])
 
   useEffect(() => {
-    // fly to the middle of the tree for "About Me"
+    const anim = Object.values(actions)[0]
+    if (anim) anim.reset().play()
+  }, [animations])
+
+  useEffect(() => {
     onReady?.((onComplete) => {
-      flyCamera(
-        { x: 15, y: 22.35, z: 6.90 },
-        { x: 6, y: 2, z: 5.00 },
-        onComplete
-      )
+      flyCamera({ x: 15, y: 22.35, z: 6.90 }, { x: 6, y: 2, z: 5.00 }, onComplete)
     })
-    // fly to second angle (press L in browser to log a position you like)
     onNextReady?.(() => {
-      flyCamera(
-        { x: 8, y: 4, z: 18 },
-        { x: 10, y: 6, z: 5 }
-      )
+      flyCamera({ x: 14.96, y: 22.55, z: 1.79 }, { x: 10, y: 8, z: 5 })
     })
-    // reset to default overview camera
+    onNext2Ready?.(() => {
+      flyCamera({ x: 16.04, y: 21.55, z: 1.36 }, { x: 10, y: 8, z: 5 })
+    })
+    onNext3Ready?.(() => {
+      flyCamera({ x: 16.04, y: 21.55, z: 1.36 }, { x: 10, y: 8, z: 5 })
+    })
     onResetReady?.(() => {
-      flyCamera(
-        { x: 0, y: 10, z: 50 },
-        { x: 0, y: 0, z: 0 }
-      )
+      flyCamera({ x: 0, y: 10, z: 50 }, { x: 0, y: 0, z: 0 })
     })
-  }, [])
+  }, [flyCamera])
 
   function handleClick(e) {
     e.stopPropagation()
@@ -73,9 +73,9 @@ export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, o
   }
 
   return (
-    <group position={position}>
+    <group ref={ref} position={position}>
       <primitive
-        object={scene.clone()}
+        object={scene}
         scale={1}
         rotation={[0, Math.PI, 0]}
         onClick={handleClick}

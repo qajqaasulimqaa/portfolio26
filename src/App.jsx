@@ -3,6 +3,7 @@ import Scene from "./Components/Scene"
 import Chat from "./Components/Chat/Chat"
 import BubblePanel from "./Components/Bubbles/BubblePanel"
 import TreeMenu from "./Components/Tree/TreeMenu"
+import NextBtn from "./Components/Tree/NextBtn"
 import WelcomeModal from "./Components/WelcomeModal/WelcomeModal"
 import { BUBBLE_COUNT } from "./Components/Bubbles/BubbleManager"
 
@@ -15,8 +16,12 @@ export default function App() {
   const bubbleNavigateRef = useRef(null)
   const treeAboutRef = useRef(null)
   const treeNextRef = useRef(null)
+  const treeNext2Ref = useRef(null)
+  const treeNext3Ref = useRef(null)
   const resetCameraRef = useRef(null)
   const [showNextBtn, setShowNextBtn] = useState(false)
+  const [showNext2Btn, setShowNext2Btn] = useState(false)
+  const [showNext3Btn, setShowNext3Btn] = useState(false)
 
   function handleBubbleClick(title, src, index, image) {
     setPanel({ title, src, image })
@@ -40,7 +45,8 @@ export default function App() {
         onTreeReady={(fn) => { treeAboutRef.current = fn }}
         onTreeResetReady={(fn) => { resetCameraRef.current = fn }}
         onTreeNextReady={(fn) => { treeNextRef.current = fn }}
-        onFloorClick={() => resetCameraRef.current?.()}
+        onTreeNext2Ready={(fn) => { treeNext2Ref.current = fn }}
+        onTreeNext3Ready={(fn) => { treeNext3Ref.current = fn }}
       />
       {treeMenuOpen && (
         <TreeMenu
@@ -51,29 +57,13 @@ export default function App() {
         />
       )}
       {showNextBtn && (
-        <button
-          onClick={() => { treeNextRef.current?.(); setShowNextBtn(false) }}
-          style={{
-            position: "fixed",
-            bottom: 40,
-            right: 40,
-            zIndex: 200,
-            background: "none",
-            border: "1px solid #7f5af0",
-            borderRadius: 8,
-            color: "#c4b5fd",
-            fontSize: 15,
-            fontFamily: "sans-serif",
-            fontWeight: 600,
-            padding: "12px 36px",
-            cursor: "pointer",
-            letterSpacing: 1,
-          }}
-          onMouseEnter={e => { e.target.style.background = "#7f5af0"; e.target.style.color = "#fff" }}
-          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#c4b5fd" }}
-        >
-          Next →
-        </button>
+        <NextBtn onClick={() => { treeNextRef.current?.(); setShowNextBtn(false); setShowNext2Btn(true) }} />
+      )}
+      {showNext2Btn && (
+        <NextBtn onClick={() => { treeNext2Ref.current?.(); setShowNext2Btn(false); setShowNext3Btn(true) }} />
+      )}
+      {showNext3Btn && (
+        <NextBtn onClick={() => { treeNext3Ref.current?.(); setShowNext3Btn(false) }} />
       )}
       {chatOpen && <Chat onClose={() => setChatOpen(false)} />}
       {panel && (
