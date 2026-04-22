@@ -1,31 +1,32 @@
-import { useRef } from "react"
-import { useGLTF, Sky, Stars } from "@react-three/drei"
+import { useRef, useEffect } from "react"
+import { useGLTF, Sky, Stars, useAnimations } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 
-function RotatingBody({ scene, onClick }) {
-  const ref = useRef()
+function CelestialBody({ path, onClick }) {
+  const groupRef = useRef()
+  const { scene, animations } = useGLTF(path)
+  const { actions } = useAnimations(animations, groupRef)
+
+  useEffect(() => {
+    console.log('Animations found:', animations.length)
+    console.log('Animation names:', animations.map((a) => a.name))
+    Object.values(actions).forEach((action) => action?.play())
+  }, [actions, animations])
 
   useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta * 0.3
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.3
     }
   })
 
   return (
-    <primitive
-      ref={ref}
-      object={scene}
-      position={[5, 8, -10]}
-      scale={10}
-      onClick={onClick}
-    />
+    <group ref={groupRef} position={[5, 8, -10]} scale={10} onClick={onClick}>
+      <primitive object={scene} />
+    </group>
   )
 }
 
 export default function DayNight({ isDay, onToggle }) {
-  const { scene: moonScene } = useGLTF("/moon.gltf")
-  const { scene: sunScene } = useGLTF("/sun.gltf")
-
   return (
     <>
       {isDay ? (
@@ -37,14 +38,14 @@ export default function DayNight({ isDay, onToggle }) {
             mieCoefficient={0.01}
             mieDirectionalG={0.7}
           />
-          <RotatingBody scene={sunScene} onClick={onToggle} />
+          <CelestialBody path="/sun.gltf" onClick={onToggle} />
         </>
       ) : (
         <>
           <Stars />
-          <RotatingBody scene={moonScene} onClick={onToggle} />
+          <CelestialBody path="/moon.gltf" onClick={onToggle} />
         </>
       )}
     </>
   )
-} 
+}
