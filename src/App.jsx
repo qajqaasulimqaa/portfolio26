@@ -4,8 +4,8 @@ import Chat from "./Components/Chat/Chat"
 import BubblePanel from "./Components/Bubbles/BubblePanel"
 import TreeMenu from "./Components/Tree/TreeMenu"
 import NextBtn from "./Components/Tree/NextBtn"
-import WelcomeModal from "./Components/WelcomeModal/WelcomeModal"
 import { BUBBLE_COUNT } from "./Components/Bubbles/BubbleManager"
+import WelcomePage from "./Components/WelcomePage"
 
 export default function App() {
   const [welcomeOpen, setWelcomeOpen] = useState(true)
@@ -19,6 +19,7 @@ export default function App() {
   const treeNext2Ref = useRef(null)
   const treeNext3Ref = useRef(null)
   const resetCameraRef = useRef(null)
+  const treeContactRef = useRef(null)
   const [showNextBtn, setShowNextBtn] = useState(false)
   const [showNext2Btn, setShowNext2Btn] = useState(false)
   const [showNext3Btn, setShowNext3Btn] = useState(false)
@@ -35,9 +36,28 @@ export default function App() {
 
   return (
     <>
-      {welcomeOpen && <WelcomeModal onClose={() => setWelcomeOpen(false)} />}
+      {welcomeOpen && <WelcomePage onEnter={() => setWelcomeOpen(false)} />}
+
+      {/* Help button — always visible once scene is entered */}
+      {!welcomeOpen && (
+        <button
+          onClick={() => setWelcomeOpen(true)}
+          onMouseEnter={e => { e.currentTarget.style.background = "#7f5af0"; e.currentTarget.style.color = "#fff" }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(26,10,46,0.85)"; e.currentTarget.style.color = "#c4b5fd" }}
+          style={{
+            position: "fixed", bottom: 24, right: 24, zIndex: 100,
+            width: 38, height: 38, borderRadius: "50%",
+            background: "rgba(26,10,46,0.85)", border: "1px solid #7f5af0",
+            color: "#c4b5fd", fontSize: 17, fontWeight: 700, fontFamily: "sans-serif",
+            cursor: "pointer", transition: "background 0.2s, color 0.2s",
+            boxShadow: "0 0 16px rgba(127,90,240,0.25)",
+          }}
+        >
+          ?
+        </button>
+      )}
+
       <Scene
-        onPrincessClick={() => setChatOpen(true)}
         onBubbleClick={handleBubbleClick}
         onBubbleReady={(fn) => { bubbleNavigateRef.current = fn }}
         activeBubbleIndex={activeBubbleIndex}
@@ -47,13 +67,15 @@ export default function App() {
         onTreeNextReady={(fn) => { treeNextRef.current = fn }}
         onTreeNext2Ready={(fn) => { treeNext2Ref.current = fn }}
         onTreeNext3Ready={(fn) => { treeNext3Ref.current = fn }}
+        onTreeContactReady={(fn) => { treeContactRef.current = fn }}
+        onPrincessClick={() => setChatOpen(true)}
       />
       {treeMenuOpen && (
         <TreeMenu
           onClose={() => setTreeMenuOpen(false)}
           onAbout={() => { setTreeMenuOpen(false); treeAboutRef.current?.(() => setShowNextBtn(true)) }}
           onPortfolio={() => { setTreeMenuOpen(false); bubbleNavigateRef.current?.(0) }}
-          onContact={() => { setTreeMenuOpen(false); alert("Contact") }}
+          onContact={() => { setTreeMenuOpen(false); treeContactRef.current?.() }}
         />
       )}
       {showNextBtn && (
@@ -63,9 +85,9 @@ export default function App() {
         <NextBtn onClick={() => { treeNext2Ref.current?.(); setShowNext2Btn(false); setShowNext3Btn(true) }} />
       )}
       {showNext3Btn && (
-        <NextBtn onClick={() => { treeNext3Ref.current?.(); setShowNext3Btn(false) }} />
+        <NextBtn onClick={() => { treeNext3Ref.current?.(); setShowNext3Btn(false); setTimeout(() => resetCameraRef.current?.(), 1600) }} />
       )}
-      {chatOpen && <Chat onClose={() => setChatOpen(false)} />}
+{chatOpen && <Chat onClose={() => setChatOpen(false)} />}
       {panel && (
         <BubblePanel
           title={panel.title}

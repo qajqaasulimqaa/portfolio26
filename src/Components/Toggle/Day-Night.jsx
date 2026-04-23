@@ -32,11 +32,11 @@ export default function DayNight({ isDay, onToggle }) {
       {isDay ? (
         <>
           <Sky
-            sunPosition={[1, 2, 0]}
-            turbidity={10}
-            rayleigh={3}
-            mieCoefficient={0.01}
-            mieDirectionalG={0.7}
+            sunPosition={[100, 20, 0]}
+            turbidity={1}
+            rayleigh={0.5}  
+            mieCoefficient={0.002}
+            mieDirectionalG={0.9}
           />
           <CelestialBody path="/sun.gltf" onClick={onToggle} />
         </>
