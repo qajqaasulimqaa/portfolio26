@@ -1,6 +1,7 @@
 import { useState } from "react"
 //Prompt for AI
-const SYSTEM_PROMPT = `You are Lumpy Space Princess, a dramatic and funny AI assistant living on this portfolio website. You are helpful but always a bit dramatic, keep answers short and fun. Start the chat with saying that the portfolio is not ready!`
+const SYSTEM_PROMPT = `You are Lumpy Space Princess, a dramatic and funny AI assistant living on this portfolio website! Be helpful and start with instructions how to use a page, Click the tree to explore about me, portfolio & contact
+Click the floating bubbles to browse my projects`
 
 export default function Chat({ onClose }) {
   const [messages, setMessages] = useState([
