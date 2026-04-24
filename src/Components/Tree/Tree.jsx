@@ -48,17 +48,24 @@ export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, o
   const [highlighted, setHighlighted] = useState(true)
 
   const flyCamera = useCallback((targetPosition, lookAtTarget, onComplete) => {
+    if (controlsRef?.current) controlsRef.current.enabled = false
+    const lookAt = new THREE.Vector3(lookAtTarget.x, lookAtTarget.y, lookAtTarget.z)
     gsap.to(camera.position, {
       ...targetPosition,
       duration: 1.5,
       ease: "power2.inOut",
       onUpdate: () => {
-        if (controlsRef?.current) {
-          controlsRef.current.target.set(lookAtTarget.x, lookAtTarget.y, lookAtTarget.z)
-          controlsRef.current.update()
-        }
+        camera.lookAt(lookAt)
       },
-      onComplete,
+      onComplete: () => {
+        camera.lookAt(lookAt)
+        if (controlsRef?.current) {
+          controlsRef.current.target.copy(lookAt)
+          controlsRef.current.update()
+          controlsRef.current.enabled = true
+        }
+        onComplete?.()
+      },
     })
   }, [camera, controlsRef])
 
