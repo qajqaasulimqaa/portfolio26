@@ -46,7 +46,7 @@ export default function Tree({ position = [0, 0, 0], controlsRef, onTreeClick, o
   const { actions } = useAnimations(animations, ref)
   const { camera } = useThree()
   const [highlighted, setHighlighted] = useState(true)
-
+//FLYING CAMERA FUNCTION
   const flyCamera = useCallback((targetPosition, lookAtTarget, onComplete) => {
     gsap.to(camera.position, {
       ...targetPosition,

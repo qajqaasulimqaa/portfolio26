@@ -6,7 +6,6 @@ import TreeMenu from "./Components/Tree/TreeMenu"
 import NextBtn from "./Components/Tree/NextBtn"
 import { BUBBLE_COUNT } from "./Components/Bubbles/BubbleManager"
 import WelcomePage from "./Components/WelcomePage"
-
 export default function App() {
   const [welcomeOpen, setWelcomeOpen] = useState(true)
   const [chatOpen, setChatOpen] = useState(false)
@@ -36,7 +35,52 @@ export default function App() {
 
   return (
     <>
+      <style>{`
+        @keyframes wiggle {
+          0%   { transform: translateX(0); }
+          30%  { transform: translateX(12px); }
+          70%  { transform: translateX(-12px); }
+          100% { transform: translateX(0); }
+        }
+      `}</style>
+
+      <img
+        src="/mouse.svg"
+        alt="mouse"
+        style={{
+          position: "fixed",
+          left: "25%",
+          width: 80,
+          height: "auto",
+          zIndex: 200,
+          animation: "wiggle 4s ease-in-out infinite",
+          borderRadius: 8,
+          scale: "0.3",
+        }}
+      />
+
       {welcomeOpen && <WelcomePage onEnter={() => setWelcomeOpen(false)} />}
+
+     //Burger Menu
+      {!welcomeOpen && (
+        <button
+          onClick={() => setTreeMenuOpen(true)}
+          onMouseEnter={e => { e.currentTarget.style.background = "#7f5af0" }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(26,10,46,0.85)" }}
+          style={{
+            position: "fixed", top: "5%", right:200, transform: "translateY(-50%)", zIndex: 100,
+            width: 44, height: 44, borderRadius: 10,
+            background: "rgba(26,10,46,0.85)", border: "1px solid #7f5af0",
+            cursor: "pointer", transition: "background 0.2s",
+            boxShadow: "0 0 16px rgba(127,90,240,0.25)",
+            display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 5,
+          }}
+        >
+          {[0, 1, 2].map(i => (
+            <span key={i} style={{ display: "block", width: 20, height: 2, background: "#c4b5fd", borderRadius: 2 }} />
+          ))}
+        </button>
+      )}
 
       {/* Help button — always visible once scene is entered */}
       {!welcomeOpen && (
