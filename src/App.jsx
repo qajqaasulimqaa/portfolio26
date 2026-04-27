@@ -129,7 +129,7 @@ export default function App() {
         <NextBtn onClick={() => { treeNext2Ref.current?.(); setShowNext2Btn(false); setShowNext3Btn(true) }} />
       )}
       {showNext3Btn && (
-        <NextBtn onClick={() => { treeNext3Ref.current?.(); setShowNext3Btn(false); setTimeout(() => resetCameraRef.current?.(), 1600) }} />
+        <NextBtn onClick={() => { setShowNext3Btn(false); resetCameraRef.current?.() }} />
       )}
 {chatOpen && <Chat onClose={() => setChatOpen(false)} />}
       {panel && (

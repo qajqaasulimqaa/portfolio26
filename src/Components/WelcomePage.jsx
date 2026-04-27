@@ -1,38 +1,18 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 export default function WelcomePage({ onEnter }) {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0)
-  const rafRef = useRef(null)
-
-  function handleEnter() {
-    setLoading(true)
-  }
 
   useEffect(() => {
     if (!loading) return
-
-    const duration = 2200
-    const startTime = performance.now()
-
-    function animate(now) {
-      const elapsed = now - startTime
-      // Ease-out so it slows near 100%
-      const t = Math.min(elapsed / duration, 1)
-      const eased = 1 - Math.pow(1 - t, 2)
-      const p = eased * 100
-      setProgress(p)
-
-      if (p < 100) {
-        rafRef.current = requestAnimationFrame(animate)
-      } else {
-        onEnter()
-      }
+    if (progress >= 100) {
+      const t = setTimeout(onEnter, 300)
+      return () => clearTimeout(t)
     }
-
-    rafRef.current = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [loading])
+    const t = setTimeout(() => setProgress(p => Math.min(p + Math.random() * 12 + 4, 100)), 80)
+    return () => clearTimeout(t)
+  }, [loading, progress, onEnter])
 
   return (
     <div style={{
@@ -69,45 +49,38 @@ export default function WelcomePage({ onEnter }) {
       </div>
 
       {loading ? (
-        <div style={{ width: 280, marginTop: 8 }}>
+        <div style={{ width: 220, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
           <div style={{
             width: "100%",
-            height: 8,
+            height: 10,
             background: "rgba(127,90,240,0.2)",
-            borderRadius: 99,
+            borderRadius: 8,
             border: "1px solid #7f5af0",
             overflow: "hidden",
           }}>
             <div style={{
               height: "100%",
               width: `${progress}%`,
-              background: "linear-gradient(90deg, #7f5af0, #c4b5fd)",
-              borderRadius: 99,
-              transition: "width 0.05s linear",
-              boxShadow: "0 0 8px rgba(196,181,253,0.6)",
+              background: "linear-gradient(90deg, #7f5af0, #c442bb)",
+              borderRadius: 8,
+              transition: "width 0.08s linear",
             }} />
           </div>
-          <div style={{
-            color: "rgba(196,181,253,0.6)",
-            fontSize: 12,
-            textAlign: "center",
-            marginTop: 8,
-            letterSpacing: 1,
-          }}>
-            Loading environment... {Math.round(progress)}%
+          <div style={{ color: "rgba(196,181,253,0.6)", fontSize: 12, letterSpacing: 1 }}>
+            {progress < 100 ? "Loading..." : "Ready!"}
           </div>
         </div>
       ) : (
         <button
-          onClick={handleEnter}
-          onMouseEnter={e => { e.target.style.background = "#7f5af0"; e.target.style.color = "#fff" }}
-          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#c4b5fd" }}
+          onClick={() => setLoading(true)}
+          onMouseEnter={e => { e.target.style.background = "#68b0e8"; e.target.style.color = "#c442bb" }}
+          onMouseLeave={e => { e.target.style.background = "#1a3d58"; e.target.style.color = "#c05ed1" }}
           style={{
             marginTop: 8,
-            background: "none",
+            background: "#7f5af0",
             border: "1px solid #7f5af0",
             borderRadius: 12,
-            color: "#c4b5fd",
+            color: "#b215d9",
             fontSize: 16,
             fontWeight: 700,
             fontFamily: "sans-serif",
